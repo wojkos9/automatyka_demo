@@ -67,20 +67,23 @@ def plot(t0, tmax, **kwargs):
     plt.legend()
 
 
+plt.title("Mała masa balonu vs duża")
 plot(0, 200, m=750)
 plot(0, 200, m=7500)
 plt.show()
 
-
+plt.title("Różne docelowe wysokości")
 plot(0, 200, target=25)
 plot(0, 200, target=100)
 plot(0, 200, target=500)
 plt.show()
 
+plt.title("Opór powietrza vs brak oporu")
 plot(0, 200, b=180.9)
 plot(0, 200, b=0)
 plt.show()
 
+plt.title("Zmienna wartość docelowa vs stała")
 plot(0, 1000, target=2000, use_r_h=True)
 plot(0, 1000, target=2000, use_r_h=False)
 plt.show()
