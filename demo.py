@@ -65,7 +65,7 @@ def plot1(t0, tmax, **kwargs):
     plt.xlabel("t [s]")
     plt.ylabel("y(t) [m]")
     plt.plot(ts, rhs, ":", label="wysokość optymalna")
-    plt.plot(ts, ys, label="wysokość rzecziwysta")
+    plt.plot(ts, ys, label="wysokość rzeczywista")
     plt.legend()
 
 
