@@ -18,7 +18,7 @@ dt = 0.01
 g = 9.81
 
 
-def control_system(t0, tmax, m=750, b=180.9, y0=0, v0=0, target=100, pp=(50, 0.05, 50), use_r_h=True, mt=(0, 0)):
+def control_system(t0, tmax, m=750, b=180.9, y0=0, v0=0, target=100, v_opt=3.5, f_max=3000, use_r_h=True):
     global dt, g
     n = int((tmax-t0) // dt)
     r_h = 0  # reference height
@@ -27,16 +27,12 @@ def control_system(t0, tmax, m=750, b=180.9, y0=0, v0=0, target=100, pp=(50, 0.0
     t0, t1 = 0, dt
     y1 = y0 + v0 * dt
     ts, ys = [t0, t1], [y0, y1]
-    v_opt = 3.5
     rhs = [0, v_opt*dt]
-    f_max = 3000
-    pid = PID(*pp)
+    fs = [0, 0]
+    vs = [v0, v0]
+    pid = PID(50, 0.05, 50)
     for _ in range(n):
         t += dt
-        if t < mt[1] <= t+dt:
-            print(t, ":", m, mt[0])
-            m = mt[0]
-
         if use_r_h:
             if r_h < target:
                 r_h += v_opt*dt
@@ -53,7 +49,17 @@ def control_system(t0, tmax, m=750, b=180.9, y0=0, v0=0, target=100, pp=(50, 0.0
         y0 = y1
         y1 = y
 
-    return ts, ys, rhs
+    return ts, ys, rhs, fs, vs
+
+
+def plot1(t0, tmax, **kwargs):
+    ts, ys, rhs, fs, vs = control_system(t0, tmax, **kwargs)
+    plt.title("Wysokość balonu w funkcji czasu")
+    plt.xlabel("t [s]")
+    plt.ylabel("y(t) [m]")
+    plt.plot(ts, rhs, ":", label="wysokość optymalna")
+    plt.plot(ts, ys, label="wysokość rzecziwysta")
+    plt.legend()
 
 
 def plot(t0, tmax, **kwargs):
@@ -66,6 +72,14 @@ def plot(t0, tmax, **kwargs):
     plt.plot(ts1, ys1, label=le)
     plt.legend()
 
+
+plot1(0, 200, m=7500)
+plt.show()
+
+
+exit(0)
+
+#----------------------------------------------------------------------------
 
 plt.title("Mała masa balonu vs duża")
 plot(0, 200, m=750)
